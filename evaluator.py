@@ -29,11 +29,11 @@ def validate(model, loader, criterion, log_freq=50):
             # compute output
             output = model(input)
             print(output)
-            print(output.shape)
-            loss = criterion(output, target)
-            #np.save('/content/drive/MyDrive/dtd/knowledge/'+image,output)
+            loss = criterion(output, target.type(torch.LongTensor).cuda())
+            for img,k in zip(image,output):
+              np.save('/content/drive/MyDrive/DTD/knowledge/'+img[:-4],output)
             # measure accuracy and record loss
-            acc1, acc5 = accuracy(output.data, target, topk=(1, 5))
+            acc1, acc5 = accuracy(output, target, topk=(1, 5))
             losses.update(loss.item(), input.size(0))
             top1.update(acc1.item(), input.size(0))
             top5.update(acc5.item(), input.size(0))

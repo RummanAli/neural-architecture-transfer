@@ -54,10 +54,12 @@ class DTDDataProvider:
         data_dir = "/content/dtd/images"
         image_names = []
         labels = []
+        img_names = []
         with open(image_list_file, "r") as f:
             counter = 0
             for i,line in enumerate(f,start=1):
                 image_name= line[:-1]
+                img_names.append(image_name)
                 image_name = os.path.join(data_dir, image_name)
                 image_names.append(image_name)
                 labels.append(counter)
@@ -68,7 +70,8 @@ class DTDDataProvider:
         norm_mean = [0.5329876098715876, 0.474260843249454, 0.42627281899380676]
         norm_std = [0.26549755708788914, 0.25473554309855373, 0.2631728035662832]
         self.image_names = image_names
-        self.labels = torch.nn.functional.one_hot(torch.Tensor(labels).to(torch.int64), num_classes=47)
+        self.img_names = img_names
+        self.labels = torch.Tensor(labels)#torch.nn.functional.one_hot(torch.Tensor(labels).to(torch.int64), num_classes=47)
         self.transform = transform
         
     def __getitem__(self, index):
@@ -84,7 +87,7 @@ class DTDDataProvider:
         label = self.labels[index]
         if self.transform is not None:
             image = self.transform(image)
-        return image,label.type(torch.FloatTensor) ,image_name[:-25]
+        return image,label ,self.img_names[index]
 
     def __len__(self):
         return len(self.image_names)
