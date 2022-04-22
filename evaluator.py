@@ -2,6 +2,7 @@ import time
 import json
 import torch
 import logging
+import numpy as np
 import argparse
 from collections import OrderedDict
 
@@ -20,14 +21,17 @@ def validate(model, loader, criterion, log_freq=50):
     model.eval()
     end = time.time()
     with torch.no_grad():
-        for i, (input, target) in enumerate(loader):
+        for i, (input, target,image) in enumerate(loader):
             target = target.cuda()
             input = input.cuda()
-
+            print(image)
+            
             # compute output
             output = model(input)
+            print(output)
+            print(output.shape)
             loss = criterion(output, target)
-
+            #np.save('/content/drive/MyDrive/dtd/knowledge/'+image,output)
             # measure accuracy and record loss
             acc1, acc5 = accuracy(output.data, target, topk=(1, 5))
             losses.update(loss.item(), input.size(0))
@@ -70,7 +74,7 @@ def main(args):
 
     test_loader = get_dataloader(image_list_file = args.file,
         dataset=args.dataset, data=args.data, test_batch_size=args.batch_size,
-        n_worker=args.workers, image_size=img_size).test
+        n_worker=args.workers, image_size=img_size)
 
     model = NATNet.build_from_config(net_config, pretrained=args.pretrained)
 
