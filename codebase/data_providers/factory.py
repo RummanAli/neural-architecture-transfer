@@ -36,6 +36,7 @@ def get_dataloader(**kwargs):
         raise NotImplementedError
 
     loader = loader_class(
+        image_list_file = kwargs['image_list_file'],
         save_path=kwargs['data'], test_batch_size=kwargs['test_batch_size'],
         n_worker=kwargs['n_worker'], image_size=kwargs['image_size'])
 

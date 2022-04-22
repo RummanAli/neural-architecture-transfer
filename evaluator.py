@@ -68,7 +68,7 @@ def main(args):
     else:
         img_size = args.img_size
 
-    test_loader = get_dataloader(
+    test_loader = get_dataloader(image_list_file = args.file,
         dataset=args.dataset, data=args.data, test_batch_size=args.batch_size,
         n_worker=args.workers, image_size=img_size).test
 
@@ -103,6 +103,8 @@ if __name__ == '__main__':
                         help='model configuration file')
     parser.add_argument('--no-pretrained', action='store_true', default=False,
                         help='reset classifier')
+    parser.add_argument('--file', type=str, default='/content/dtd/labels/train1.txt',
+                        help='miss')
     cfgs = parser.parse_args()
 
     cfgs.pretrained = not cfgs.no_pretrained
